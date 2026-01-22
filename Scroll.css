@@ -1,0 +1,11 @@
+#New{
+  display: flex ;
+  flex-direction: column;
+  gap: 20px;
+}
+#button{
+  width: 100px;
+  height: 40px;
+  background: rgb(148, 184, 148);
+  padding: 5px;
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bubble Blitz</title>
+</head>
+
+<body class="min-h-screen bg-[#020617] text-white font-sans overflow-hidden relative">
+
+  <!-- Ambient Background -->
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="absolute -top-52 -left-52 w-[600px] h-[600px] bg-indigo-600/20 blur-[180px]"></div>
+    <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-500/15 blur-[160px]"></div>
+  </div>
+
+  <div id="startPage" class="absolute inset-0 flex flex-col items-center justify-center p-6 bg-[#020617] z-20">
+    <h1 class="text-3xl md:text-6xl font-extrabold mb-8 text-center">🎯 Bubble Blitz</h1>
+    <p class="text-lg md:text-xl text-white/70 mb-8 text-center max-w-xl">
+      Click the bubble that matches the TARGET number. <br>
+      Each correct hit gives 1 point. You have 60 seconds to score as much as you can!
+    </p>
+    <!-- TIME SELECTOR -->
+    <div class="flex flex-col items-center mb-6">
+      <label for="timeRange" class="text-white font-semibold mb-2">Select Game Time:</label>
+      <input id="timeRange" type="range" min="30" max="180" value="60" step="1" class="w-72 md:w-96">
+      <div class="flex items-center gap-1">
+        <p id="timeDisplay" class="text-white mt-2 font-bold text-xl">1:00</p><p class="text-white mt-2 font-bold text-xl">Min</p>
+      </div>
+    </div>
+
+    <button id="startBtn"
+      class="px-8 py-4 cursor-pointer bg-indigo-500 hover:bg-indigo-600 rounded-xl shadow-lg text-2xl font-bold">
+      Start Game
+    </button>
+  </div>
+
+  <!-- GAME WRAPPER -->
+  <div id="gamePage" class="hidden relative z-10 h-screen flex items-center justify-center px-4">
+
+    <div class="w-full max-w-7xl h-[94%]
+                rounded-[32px]
+                bg-gradient-to-b from-white/[0.07] to-white/[0.02]
+                backdrop-blur-2xl
+                border border-white/10
+                shadow-[0_30px_120px_rgba(0,0,0,0.7)]
+                overflow-hidden">
+
+      <!-- HEADER -->
+ <header class="h-[90px] px-2 sm:px-4 md:px-10 md:pb-0 pb-4 flex flex-col sm:flex-row items-center justify-between
+               border-b border-white/10 gap-2 sm:gap-3 md:gap-0">
+
+  <!-- Brand -->
+  <div class="flex items-center gap-2 sm:gap-3 md:gap-4">
+    <div class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl
+                bg-gradient-to-br from-indigo-400 to-cyan-400
+                flex items-center justify-center
+                text-xl sm:text-2xl md:text-2xl font-black
+                shadow-[0_0_30px_rgba(99,102,241,0.7)]">
+      🎯
+    </div>
+
+    <div>
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">
+        Bubble Blitz
+      </h1>
+      <p class="text-[9px] sm:text-xs md:text-sm text-white/50 tracking-wide">
+        Precision • Speed • Focus
+      </p>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="flex gap-2 sm:gap-3 md:gap-5 flex-wrap justify-center sm:justify-start">
+
+    <!-- HIT -->
+    <div class="stat-box flex items-center gap-2 sm:gap-3">
+      <span class="stat-label text-[9px] sm:text-[10px] md:text-[11px]">TARGET</span>
+      <span id="Hit" class="stat-number
+          shadow-[0_0_30px_rgba(59,130,246,0.8)]  
+          bg-blue-400 py-1 px-2 sm:py-2 sm:px-3 md:py-2 md:px-4 rounded-xl text-sm sm:text-xl md:text-2xl text-white font-semibold">
+        5
+      </span>
+    </div>
+
+    <!-- SCORE -->
+    <div class="stat-box flex items-center gap-2 sm:gap-3">
+      <span class="stat-label text-[9px] sm:text-[10px] md:text-[11px]">SCORE</span>
+      <span id="Score" class="stat-number
+          shadow-[0_0_30px_rgba(34,197,94,0.8)]  
+          bg-green-400 py-1 px-2 sm:py-2 sm:px-3 md:py-2 md:px-4 rounded-xl text-sm sm:text-xl md:text-2xl text-white font-semibold">
+        0
+      </span>
+    </div>
+
+    <!-- TIME -->
+    <div class="stat-box flex items-center gap-2 sm:gap-3">
+      <span class="stat-label text-[9px] sm:text-[10px] md:text-[11px]">TIME</span>
+      <span id="Time" class="stat-number
+          shadow-[0_0_30px_rgba(239,68,68,0.8)]  
+          bg-red-400 py-1 px-2 sm:py-2 sm:px-3 md:py-2 md:px-4 rounded-xl text-sm sm:text-xl md:text-2xl text-white font-semibold">
+        60s
+      </span>
+    </div>
+
+  </div>
+</header>
+
+
+      <!-- GAME AREA -->
+      <main id="Glass" class="relative h-[calc(100%-110px)]
+               flex flex-wrap items-center justify-center
+               gap-4 p-4 md:p-10
+               overflow-hidden">
+
+      </main>
+    </div>
+  </div>
+
+  <!-- COMPONENT STYLES -->
+  <style>
+    .stat-box {
+      @apply w-[110px] h-[70px] rounded-2xl bg-white/10 backdrop-blur-xl border border-white/15 flex flex-col items-center justify-center shadow-[0_12px_40px_rgba(0, 0, 0, 0.5)];
+    }
+
+    .stat-label {
+      @apply text-[11px] tracking-[0.25em] text-white/50 font-semibold;
+    }
+
+    .stat-number {
+      @apply text-2xl md:text-3xl font-extrabold;
+    }
+
+    @media (max-width: 768px) {
+      #Glass button {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+
+  <script src="Scroll.js"></script>
